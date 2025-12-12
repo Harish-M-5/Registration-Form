@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Student Registration - Demo</title>
+  <style>
+    :root{
+      --card-bg: #fff;
+      --page-bg: linear-gradient(180deg,#f6f5fb 0%, #f0eef6 100%);
+      --muted: #8b8b8b;
+      --accent: #e53935;
+      --success: #2e7d32;
+      --shadow: 0 8px 22px rgba(22,18,30,0.06);
+      --radius: 10px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%;margin:0;background:var(--page-bg);color:#222}
+    .container{max-width:840px;margin:40px auto;padding:28px;display:grid;gap:20px}
+    header{display:flex;justify-content:center;align-items:center}
+    h1{margin:0;font-size:18px;font-weight:700;color:#2f2f2f}
+    nav{display:flex;gap:12px;justify-content:center}
+    .tab{padding:8px 14px;border-radius:8px;background:transparent;border:1px solid transparent;cursor:pointer;font-weight:600}
+    .tab.active{background:#fff;border-color:#e9e7f2;box-shadow:var(--shadow)}
+    .card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+    form .row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+    label{display:block;font-size:13px;margin-bottom:6px;color:#333;font-weight:600}
+    input[type="text"],input[type="number"],input[type="email"],input[type="password"],select{
+      width:100%;padding:10px;border:1px solid #e1e0e6;border-radius:6px;font-size:14px;background:#fafafa;
+    }
+    .col-2{flex:1 1 48%}
+    .col-1{flex:1 1 100%}
+    .radio-row{display:flex;align-items:center;gap:16px;padding-top:6px}
+    .btn{display:inline-block;padding:10px 14px;border-radius:8px;border:0;cursor:pointer;font-weight:700}
+    .btn.primary{background:var(--accent);color:#fff;opacity:0.95}
+    .btn.ghost{background:#fff;border:1px solid #e1e0e6}
+    .note{font-size:12px;color:var(--muted);margin-bottom:6px}
+    .error{color:#b00020;font-size:13px;margin-top:6px}
+    .table-wrap{overflow:auto}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{padding:10px;border:1px solid #eee;text-align:left}
+    th{background:#fbfbfd;font-weight:700;color:#333}
+    .action-btn{padding:6px 10px;border-radius:6px;border:0;cursor:pointer;background:#ff4d6d;color:#fff}
+    .empty{padding:18px;text-align:center;color:var(--muted)}
+    /* Responsive */
+    @media (max-width:640px){
+      .col-2{flex:1 1 100%}
+      .container{margin:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Student Registration Form</h1>
+    </header>
+
+    <nav role="navigation" aria-label="pages">
+      <button class="tab active" id="tab-register">Registration</button>
+      <button class="tab" id="tab-list">Registered List</button>
+    </nav>
+
+    <!-- Registration Page -->
+    <section id="page-register" class="card" aria-labelledby="tab-register">
+      <form id="regForm" novalidate>
+        <div class="row">
+          <div class="col-1">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" placeholder="Enter your full name" required />
+            <div class="error" id="err-name" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label for="age">Age</label>
+            <input id="age" name="age" type="number" min="1" max="120" placeholder="Enter your age" required />
+            <div class="error" id="err-age" aria-live="polite"></div>
+          </div>
+
+          <div class="col-2">
+            <label>Gender</label>
+            <div class="radio-row">
+              <label><input type="radio" name="gender" value="Male" required> Male</label>
+              <label><input type="radio" name="gender" value="Female" required> Female</label>
+            </div>
+            <div class="error" id="err-gender" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-1">
+            <label for="course">Course</label>
+            <select id="course" name="course" required>
+              <option value="">Select a Course</option>
+              <option>Java</option>
+              <option>Python</option>
+              <option>Web Development</option>
+              <option>Data Science</option>
+            </select>
+            <div class="error" id="err-course" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-1">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="Enter your email address" required />
+            <div class="error" id="err-email" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-1">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="Min. 6 characters" minlength="6" required />
+            <div class="note">Password must be at least 6 characters.</div>
+            <div class="error" id="err-password" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+          <div class="note">Fill required fields to enable Register</div>
+          <div>
+            <button type="submit" class="btn primary" id="btnRegister">Register Student</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Registered List Page -->
+    <section id="page-list" class="card" style="display:none" aria-labelledby="tab-list">
+      <h3 style="margin-top:0">Registered List</h3>
+      <div class="table-wrap">
+        <table id="regTable" aria-live="polite">
+          <thead>
+            <tr>
+              <th>Name</th><th>Age</th><th>Gender</th><th>Course</th><th>Email</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <!-- rows -->
+          </tbody>
+        </table>
+      </div>
+      <div id="emptyMsg" class="empty" style="display:none">No students registered yet.</div>
+    </section>
+  </div>
+
+  <script>
+    // Simple page switching
+    const tabRegister = document.getElementById('tab-register');
+    const tabList = document.getElementById('tab-list');
+    const pageRegister = document.getElementById('page-register');
+    const pageList = document.getElementById('page-list');
+
+    tabRegister.addEventListener('click', () => { showPage('register') });
+    tabList.addEventListener('click', () => { showPage('list') });
+
+    function showPage(name){
+      if(name === 'register'){
+        pageRegister.style.display = ''; pageList.style.display = 'none';
+        tabRegister.classList.add('active'); tabList.classList.remove('active');
+      } else {
+        pageRegister.style.display = 'none'; pageList.style.display = '';
+        tabRegister.classList.remove('active'); tabList.classList.add('active');
+        renderTable();
+      }
+    }
+
+    // Form + validation
+    const form = document.getElementById('regForm');
+    const inputs = {
+      name: document.getElementById('name'),
+      age: document.getElementById('age'),
+      gender: document.getElementsByName('gender'),
+      course: document.getElementById('course'),
+      email: document.getElementById('email'),
+      password: document.getElementById('password'),
+    };
+
+    // show error helper
+    function setError(id, message){
+      document.getElementById('err-' + id).textContent = message || '';
+    }
+
+    function validateAll(){
+      let ok = true;
+      // name
+      if(!inputs.name.value.trim()){ setError('name','Name is required'); ok=false } else setError('name','');
+      // age
+      const ageVal = inputs.age.value;
+      if(!ageVal){ setError('age','Age is required'); ok=false }
+      else if(isNaN(ageVal) || ageVal<=0){ setError('age','Enter a valid age'); ok=false } else setError('age','');
+      // gender
+      const genderChecked = Array.from(inputs.gender).some(r=>r.checked);
+      if(!genderChecked){ setError('gender','Select gender'); ok=false } else setError('gender','');
+      // course
+      if(!inputs.course.value){ setError('course','Choose a course'); ok=false } else setError('course','');
+      // email
+      if(!inputs.email.value){ setError('email','Email is required'); ok=false }
+      else if(!/^\S+@\S+\.\S+$/.test(inputs.email.value)){ setError('email','Enter a valid email'); ok=false } else setError('email','');
+      // password
+      if(!inputs.password.value){ setError('password','Password required'); ok=false }
+      else if(inputs.password.value.length < 6){ setError('password','Password must be at least 6 chars'); ok=false } else setError('password','');
+
+      return ok;
+    }
+
+    // Persisted storage key
+    const STORAGE_KEY = 'students_demo_list_v1';
+
+    function getStudents(){
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      } catch(e){ return []; }
+    }
+    function saveStudents(list){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    }
+
+    // Render table
+    function renderTable(){
+      const body = document.getElementById('tableBody');
+      const emptyMsg = document.getElementById('emptyMsg');
+      const arr = getStudents();
+      body.innerHTML = '';
+      if(!arr.length){
+        emptyMsg.style.display = '';
+        document.getElementById('regTable').style.display = 'none';
+        return;
+      }
+      emptyMsg.style.display = 'none';
+      document.getElementById('regTable').style.display = '';
+      arr.forEach((s, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHtml(s.name)}</td>
+          <td>${escapeHtml(s.age)}</td>
+          <td>${escapeHtml(s.gender)}</td>
+          <td>${escapeHtml(s.course)}</td>
+          <td>${escapeHtml(s.email)}</td>
+          <td><button class="action-btn" data-idx="${idx}">Delete</button></td>
+        `;
+        body.appendChild(tr);
+      });
+      // attach delete handlers
+      body.querySelectorAll('.action-btn').forEach(btn=>{
+        btn.addEventListener('click', (e)=>{
+          const idx = Number(btn.getAttribute('data-idx'));
+          if(!Number.isNaN(idx)){
+            const arr = getStudents();
+            arr.splice(idx,1);
+            saveStudents(arr);
+            renderTable();
+          }
+        });
+      });
+    }
+
+    // escape for safety
+    function escapeHtml(s){
+      return String(s)
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;')
+        .replaceAll("'",'&#39;');
+    }
+
+    // submit
+    form.addEventListener('submit', (ev)=>{
+      ev.preventDefault();
+      if(!validateAll()){
+        return;
+      }
+      // build student object
+      const gender = Array.from(inputs.gender).find(r=>r.checked)?.value || '';
+      const student = {
+        name: inputs.name.value.trim(),
+        age: inputs.age.value.trim(),
+        gender,
+        course: inputs.course.value,
+        email: inputs.email.value.trim(),
+        // NOTE: we DO NOT store password in this demo for privacy
+      };
+      const arr = getStudents();
+      arr.push(student);
+      saveStudents(arr);
+
+      // clear form
+      form.reset();
+      // clear error messages
+      ['name','age','gender','course','email','password'].forEach(id=>setError(id,''));
+
+      // go to list page and render
+      showPage('list');
+      renderTable();
+    });
+
+    // live validation on input change
+    ['name','age','course','email','password'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el){
+        el.addEventListener('input', ()=>{ validateAll(); });
+      }
+    });
+    Array.from(inputs.gender).forEach(r=>r.addEventListener('change', ()=>validateAll()));
+
+    // init: sample data to match screenshot (optional)
+    (function initSample(){
+      const existing = getStudents();
+      if(existing.length === 0){
+        const sample = [
+          {name:'Srimathy', age:'20', gender:'Female', course:'Java', email:'srimathyjayaseelan@gmail.com'},
+          {name:'Srija', age:'29', gender:'Female', course:'Python', email:'srija@gmail.com'}
+        ];
+        saveStudents(sample);
+      }
+      // render list when first opened
+      // default page is register, so do not auto-show list
+    })();
+
+    // Accessibility: allow keyboard switching with left/right arrows
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'ArrowLeft' || e.key === 'ArrowRight'){
+        const current = tabRegister.classList.contains('active') ? 'register' : 'list';
+        showPage(current === 'register' ? 'list' : 'register');
+      }
+    });
+  </script>
+</body>
+</html>
